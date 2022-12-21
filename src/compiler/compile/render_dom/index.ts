@@ -527,11 +527,11 @@ export default function dom(
 		}
 
 		const declaration = b`
-			class ${name} extends @SvelteElement {
-				constructor(options) {
-					super();
+		class ${name} extends @SvelteElement {
+			constructor(options) {
+				super();
 
-					${css.code && b`this.shadowRoot.innerHTML = \`<style>${css.code.replace(regex_backslashes, '\\\\')}${css_sourcemap_enabled && options.dev ? `\n/*# sourceMappingURL=${css.map.toUrl()} */` : ''}</style>\`;`}
+				${css.code && b`this.shadowRoot.innerHTML = @create_web_component_styles(\`${css.code.replace(regex_backslashes, '\\\\')}${css_sourcemap_enabled && options.dev ? `\n/*# sourceMappingURL=${css.map.toUrl()} */` : ''}\`);`}
 
 					@init(this, { target: this.shadowRoot, props: ${init_props}, customElement: true }, ${definition}, ${has_create_fragment ? 'create_fragment' : 'null'}, ${not_equal}, ${prop_indexes}, null, ${dirty});
 

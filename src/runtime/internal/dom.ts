@@ -13,7 +13,7 @@ export function end_hydrating() {
 
 type NodeEx = Node & {
 	claim_order?: number,
-	hydrate_init? : true,
+	hydrate_init?: true,
 	actual_end_child?: NodeEx,
 	childNodes: NodeListOf<NodeEx>,
 };
@@ -35,7 +35,7 @@ function init_hydrate(target: NodeEx) {
 	if (target.hydrate_init) return;
 	target.hydrate_init = true;
 
-	type NodeEx2 = NodeEx & {claim_order: number};
+	type NodeEx2 = NodeEx & { claim_order: number };
 
 	// We know that all children have claim_order values since the unclaimed have been detached if target is not <head>
 	let children: ArrayLike<NodeEx2> = target.childNodes as NodeListOf<NodeEx2>;
@@ -142,6 +142,14 @@ export function append_styles(
 		style.textContent = styles;
 		append_stylesheet(append_styles_to, style);
 	}
+}
+
+const web_components_style_policy = ('trustedTypes' in globalThis) && globalThis.trustedTypes.createPolicy('svelte-web-component-style-literal', {
+	createHTML: html => html
+});
+export function create_web_component_styles(styles: string) {
+	const html = `<style>${styles}</style>`;
+	return web_components_style_policy ? web_components_style_policy.createHTML(html) : html;
 }
 
 export function get_root_for_style(node: Node): ShadowRoot | Document {
@@ -260,7 +268,7 @@ export function listen(node: EventTarget, event: string, handler: EventListenerO
 }
 
 export function prevent_default(fn) {
-	return function(event) {
+	return function (event) {
 		event.preventDefault();
 		// @ts-ignore
 		return fn.call(this, event);
@@ -268,7 +276,7 @@ export function prevent_default(fn) {
 }
 
 export function stop_propagation(fn) {
-	return function(event) {
+	return function (event) {
 		event.stopPropagation();
 		// @ts-ignore
 		return fn.call(this, event);
@@ -276,14 +284,14 @@ export function stop_propagation(fn) {
 }
 
 export function self(fn) {
-	return function(event) {
+	return function (event) {
 		// @ts-ignore
 		if (event.target === this) fn.call(this, event);
 	};
 }
 
 export function trusted(fn) {
-	return function(event) {
+	return function (event) {
 		// @ts-ignore
 		if (event.isTrusted) fn.call(this, event);
 	};
@@ -380,7 +388,7 @@ export function children(element: Element) {
 
 function init_claim_info(nodes: ChildNodeArray) {
 	if (nodes.claim_info === undefined) {
-		nodes.claim_info = {last_index: 0, total_claimed: 0};
+		nodes.claim_info = { last_index: 0, total_claimed: 0 };
 	}
 }
 
@@ -644,7 +652,7 @@ export function toggle_class(element, name, toggle) {
 	element.classList[toggle ? 'add' : 'remove'](name);
 }
 
-export function custom_event<T=any>(type: string, detail?: T, { bubbles = false, cancelable = false } = {}): CustomEvent<T> {
+export function custom_event<T = any>(type: string, detail?: T, { bubbles = false, cancelable = false } = {}): CustomEvent<T> {
 	const e: CustomEvent<T> = document.createEvent('CustomEvent');
 	e.initCustomEvent(type, bubbles, cancelable, detail);
 	return e;
