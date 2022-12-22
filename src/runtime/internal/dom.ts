@@ -144,6 +144,13 @@ export function append_styles(
 	}
 }
 
+/**
+ * Our TrustedTypePolicy for styles injected into WebComponents.
+ * 
+ * That HTML is a developer-authored constant, and is parsed with innerHTML
+ * before any untrusted expressions have been mixed in. Therefore it is
+ * considered safe by construction.
+ */
 const web_components_style_policy = ('trustedTypes' in globalThis) && globalThis.trustedTypes.createPolicy('svelte-web-component-style-literal', {
 	createHTML: html => html
 });
